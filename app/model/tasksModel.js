@@ -1,5 +1,6 @@
 import { Class } from 'meteor/jagi:astronomy';
 import { Mongo } from 'meteor/mongo';
+import { createAndUpdateTimestamp } from './models';
 
 export const Tasks = new Mongo.Collection('tasks');
 
@@ -15,12 +16,7 @@ export const Task = Class.create({
     },
   },
   behaviors: {
-    timestamp: {
-      hasCreatedField: true,
-      createdFieldName: 'createdAt',
-      hasUpdatedField: true,
-      updatedFieldName: 'updatedAt',
-    },
+    timestamp: createAndUpdateTimestamp,
   },
   meteorMethods: {
     toggleDone() {

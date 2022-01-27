@@ -11,7 +11,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { Task } from './Task';
-import { Tasks } from '../../model/TasksCollection';
+import { Tasks } from '../../model/tasksModel';
 import { TaskForm } from './TaskForm';
 import { useTracker } from 'meteor/react-meteor-data';
 
