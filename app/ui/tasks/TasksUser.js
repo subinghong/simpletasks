@@ -11,15 +11,15 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { Task } from './Task';
-import { TasksCollection } from '../../model/TasksCollection';
+import { Tasks } from '../../model/TasksCollection';
 import { TaskForm } from './TaskForm';
 import { useTracker } from 'meteor/react-meteor-data';
 
-const markAsDone = ({ _id, done }) => Meteor.call('tasks.setDone', _id, !done);
+const markAsDone = ({ _id }) => Meteor.call('tasks.setDone', _id);
 
 const deleteTask = ({ _id }) => Meteor.call('tasks.remove', _id);
 
-export const Tasks = ({ user }) => {
+export const TasksUser = ({ user }) => {
   const [hideDone, setHideDone] = useState(false);
   const doneFilter = { done: { $ne: true } };
   const userFilter = user ? { userId: user._id } : {};
@@ -36,15 +36,12 @@ export const Tasks = ({ user }) => {
       return { ...noDataAvailable, isLoading: true };
     }
 
-    const tasksData = TasksCollection.find(
-      hideDone ? pendingOnlyFilter : userFilter,
-      {
-        sort: { createdAt: -1 },
-      }
-    ).fetch();
+    const tasksData = Tasks.find(hideDone ? pendingOnlyFilter : userFilter, {
+      sort: { createdAt: -1 },
+    }).fetch();
 
-    const pending = TasksCollection.find(pendingOnlyFilter).count();
-    const all = TasksCollection.find({}).count();
+    const pending = Tasks.find(pendingOnlyFilter).count();
+    const all = Tasks.find({}).count();
 
     return { tasks: tasksData, pendingCount: pending, allCount: all };
   });

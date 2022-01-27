@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import { TasksCollection } from '../model/TasksCollection';
+import { Task } from '../model/TasksCollection';
 
 Meteor.methods({
   'tasks.insert'(description) {
@@ -10,13 +10,11 @@ Meteor.methods({
       throw new Meteor.Error('Error adding task', 'Not authorized.');
     }
 
-    TasksCollection.insert({
-      description,
-      createdAt: new Date(),
-      userId: this.userId,
-    });
+    const task = new Task();
+    task.description = description;
+    task.userId = this.userId;
+    task.save();
   },
-
   'tasks.remove'(taskId) {
     check(taskId, String);
 
@@ -24,33 +22,24 @@ Meteor.methods({
       throw new Meteor.Error('Error removing task', 'Not authorized.');
     }
 
-    const task = TasksCollection.findOne({ _id: taskId, userId: this.userId });
-
+    const task = Task.findOne({ _id: taskId, userId: this.userId });
     if (!task) {
       throw new Meteor.Error('Error removing task', 'Access denied.');
     }
-
-    TasksCollection.remove(taskId);
+    task.remove();
   },
 
-  'tasks.setDone'(taskId, done) {
+  'tasks.setDone'(taskId) {
     check(taskId, String);
-    check(done, Boolean);
 
     if (!this.userId) {
       throw new Meteor.Error('Error updating task', 'Not authorized.');
     }
 
-    const task = TasksCollection.findOne({ _id: taskId, userId: this.userId });
-
+    const task = Task.findOne({ _id: taskId, userId: this.userId });
     if (!task) {
       throw new Meteor.Error('Error updating task', 'Access denied.');
     }
-
-    TasksCollection.update(taskId, {
-      $set: {
-        done,
-      },
-    });
+    task.toggleDone();
   },
 });

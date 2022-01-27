@@ -8,7 +8,7 @@ import {
   extendTheme,
 } from '@chakra-ui/react';
 import { useTracker } from 'meteor/react-meteor-data';
-import { Tasks } from './tasks/Tasks';
+import { TasksUser } from './tasks/TasksUser';
 import { LoginForm } from './auth/LoginForm';
 import { Navbar } from './Navbar';
 
@@ -28,7 +28,7 @@ export const App = () => {
       <ChakraProvider theme={theme}>
         <Navbar user={user} />
         <Stack as={Box} spacing={{ base: 8 }}>
-          {!user ? <LoginForm /> : <Tasks user={user} />}
+          {!user ? <LoginForm /> : <TasksUser user={user} />}
         </Stack>
       </ChakraProvider>
     </>

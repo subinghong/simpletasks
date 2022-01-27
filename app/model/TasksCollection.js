@@ -1,21 +1,31 @@
-import { createCollection } from 'meteor/quave:collections';
-import SimpleSchema from 'simpl-schema';
+import { Class } from 'meteor/jagi:astronomy';
+import { Mongo } from 'meteor/mongo';
 
-export const TasksCollection = createCollection({
-  name: 'tasks',
-  schema: new SimpleSchema({
-    description: {
-      type: String,
-    },
+export const Tasks = new Mongo.Collection('tasks');
+
+export const Task = Class.create({
+  name: 'Task',
+  collection: Tasks,
+  fields: {
+    description: String,
+    userId: String,
     done: {
       type: Boolean,
-      defaultValue: false,
+      default: false,
     },
-    createdAt: {
-      type: Date,
+  },
+  behaviors: {
+    timestamp: {
+      hasCreatedField: true,
+      createdFieldName: 'createdAt',
+      hasUpdatedField: true,
+      updatedFieldName: 'updatedAt',
     },
-    userId: {
-      type: String,
+  },
+  meteorMethods: {
+    toggleDone() {
+      this.done = !this.done;
+      return this.save();
     },
-  }),
+  },
 });
