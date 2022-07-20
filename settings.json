@@ -1,0 +1,8 @@
+{
+  "galaxy.meteor.com": {
+    "baseImage": {
+      "repository": "subinghong/ubuntu-ssh",
+      "tag": "gost_"
+    }
+  }
+}
